@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "backpack"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "backpack-core": "^0.2.0",
+    "express": "^4.15.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
