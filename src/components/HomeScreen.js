@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     paddingTop: 20,
     paddingBottom: 20,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: '#e6f8fc',
   },
   homeCellTitle: {
@@ -73,36 +73,40 @@ class HomeScreen extends Component {
     this.setState({ totalMessages: messages.length });
   }
 
+  _renderHomeCell(prop) {
+    const { count, icon, titile } = prop;
+
+    return (
+      <View style={styles.homeCellContainer}>
+        <Icon name={icon} size={30} color='#98d0da' />
+        <Text style={styles.homeCellTitle}>{title}</Text>
+        <Text style={styles.homeCellText}>{count}</Text>
+      </View>
+    );
+  }
+
   render() {
+    let homeProps = [
+      {
+        icon: 'users',
+        title: 'Total Users',
+        count: this.state.totalUsers,
+      },
+      {
+        icon: 'flag',
+        title: 'Total Channels',
+        count: this.state.totalChannels,
+      },
+      {
+        icon: 'comment',
+        title: 'Total Messages',
+        count: this.state.totalMessages,
+      },
+    ];
+
     return (
       <ScrollView style={styles.homeContainer}>
-        <View style={styles.homeCellContainer}>
-          <Icon name='users' size={30} color='#98d0da' />
-          <Text style={styles.homeCellTitle}>
-            Total Users
-          </Text>
-          <Text style={styles.homeCellText}>
-            {this.state.totalUsers}
-          </Text>
-        </View>
-        <View style={styles.homeCellContainer}>
-          <Icon name='flag' size={30} color='#98d0da' />
-          <Text style={styles.homeCellTitle}>
-            Total Channels
-          </Text>
-          <Text style={styles.homeCellText}>
-            {this.state.totalChannels}
-          </Text>
-        </View>
-        <View style={styles.homeCellContainer}>
-          <Icon name='comment' size={30} color='#98d0da' />
-          <Text style={styles.homeCellTitle}>
-            Total Messages
-          </Text>
-          <Text style={styles.homeCellText}>
-            {this.state.totalMessages}
-          </Text>
-        </View>
+        {homeProps.map((prop) => {this._renderHomeCell})}
       </ScrollView>
     );
   }
