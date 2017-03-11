@@ -1,9 +1,8 @@
 const ameUrl = 'http://localhost:3000';
 // TODO durring worhskop this should by IP_ADDRESS_OF_PC:3000 where the server will run
 
-export function getChannelsHistory() {
+export function getChannelsHistory(callback) {
   const channelsHistoryUrl = `${ameUrl}/channels-history`;
-  const callback = (data) => console.log(data);
   getFromAPI(channelsHistoryUrl, callback);
 }
 
@@ -13,15 +12,13 @@ export function getChannelHistory(channelID) {
   getFromAPI(channelHistoryUrl, callback);
 }
 
-export function getAllChannels() {
+export function getAllChannels(callback) {
   const channelsUrl = `${ameUrl}/channels`;
-  const callback = (data) => console.log(data);
   getFromAPI(channelsUrl, callback);
 }
 
-export function getAllUsers() {
+export function getAllUsers(callback) {
   const usersUrl = `${ameUrl}/users`;
-  const callback = (data) => console.log(data);
   getFromAPI(usersUrl, callback);
 }
 
