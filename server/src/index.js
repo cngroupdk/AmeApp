@@ -2,8 +2,15 @@ import express from 'express';
 import axios from 'axios';
 
 let app = express();
-let lastFetch = 0;
 let serverData = {};
+let lastFetch = {
+  channels: 0,
+  channelHistory: 0,
+  channelsHistory: 0,
+  users: 0,
+  user: 0,
+};
+
 
 const DELAY = 10000;
 const channelsHistory = 'channels.history';
@@ -48,7 +55,7 @@ function getChannelsList() {
 }
 
 app.get('/channels', async (req, res) => {
-  if (!serverData.channels || ((lastFetch + DELAY) < getActualTime())) {
+  if (!serverData.channels || ((lastFetch.channels + DELAY) < getActualTime())) {
     const allChannels = await getChannelsList();
 
     if (allChannels.error) {
@@ -60,7 +67,7 @@ app.get('/channels', async (req, res) => {
       return { id, name };
     });
 
-    lastFetch = getActualTime();
+    lastFetch.channels = getActualTime();
     serverData.channels = mappedChannels;
 
     return res.json(mappedChannels);
@@ -70,13 +77,13 @@ app.get('/channels', async (req, res) => {
 });
 
 app.get('/channel-history/:id', (req, res) => {
-  if (!serverData.channelHistory || ((lastFetch + DELAY) < getActualTime())) {
+  if (!serverData.channelHistory || ((lastFetch.channelHistory + DELAY) < getActualTime())) {
     getChannelHistory(req.params.id, (err, data) => {
       if (err) {
         return res.status(500).json(err);
       }
 
-      lastFetch = getActualTime();
+      lastFetch.channelHistory = getActualTime();
       serverData.channelHistory = data;
 
       return res.json(data);
@@ -87,7 +94,7 @@ app.get('/channel-history/:id', (req, res) => {
 });
 
 app.get('/channels-history', async (req, res) => {
-  if (!serverData.channelsHistory || ((lastFetch + DELAY) < getActualTime())) {
+  if (!serverData.channelsHistory || ((lastFetch.channelsHistory + DELAY) < getActualTime())) {
     let messages = {};
     const allChannels = await getChannelsList();
 
@@ -117,7 +124,7 @@ app.get('/channels-history', async (req, res) => {
         allMessages = allMessages.concat(messages[key]);
       });
 
-      lastFetch = getActualTime();
+      lastFetch.channelsHistory = getActualTime();
       serverData.channelsHistory = allMessages;
 
       res.json(allMessages);
@@ -131,7 +138,7 @@ app.get('/channels-history', async (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-  if (!serverData.users || ((lastFetch + DELAY) < getActualTime())) {
+  if (!serverData.users || ((lastFetch.users + DELAY) < getActualTime())) {
     axios.get(
       `${slackUrl}${usersList}`,
       {
@@ -145,7 +152,7 @@ app.get('/users', (req, res) => {
         return { id, profile };
       });
 
-      lastFetch = getActualTime();
+      lastFetch.users = getActualTime();
       serverData.users = allMembers;
 
       res.json(allMembers);
@@ -159,7 +166,7 @@ app.get('/users', (req, res) => {
 });
 
 app.get('/user/:id', (req, res) => {
-  if (!serverData.user || ((lastFetch + DELAY) < getActualTime())) {
+  if (!serverData.user || ((lastFetch.user + DELAY) < getActualTime())) {
     axios.get(
       `${slackUrl}${userInfo}`,
       {
@@ -170,7 +177,7 @@ app.get('/user/:id', (req, res) => {
       }
     ).then((response) => {
 
-      lastFetch = getActualTime();
+      lastFetch.user = getActualTime();
       serverData.user = response.data.user.profile;
 
       res.json(response.data.user.profile);
