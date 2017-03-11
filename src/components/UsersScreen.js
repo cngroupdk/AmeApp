@@ -5,6 +5,8 @@ import {
   View,
   ListView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import UserCell from './UserCell';
 
 const mockData =
@@ -27,6 +29,13 @@ const mockData =
 
 
 export default class HomeScreen extends Component {
+  static navigationOptions = {
+    tabBar: {
+      icon: ({ tintColor }) => (
+        <Icon name='users' size={28} color={tintColor} />
+      ),
+    },
+  }
 
   constructor(props) {
     super(props);

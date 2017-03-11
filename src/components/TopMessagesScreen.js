@@ -5,7 +5,17 @@ import {
   View,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 export default class HomeScreen extends Component {
+  static navigationOptions = {
+    tabBar: {
+      icon: ({ tintColor }) => (
+        <Icon name='comment' size={28} color={tintColor} />
+      ),
+    },
+  }
+
   render() {
     return (
       <View style={styles.container}>

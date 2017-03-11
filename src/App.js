@@ -13,7 +13,9 @@ const AmeApp = TabNavigator({
   Users: { screen: UsersScreen },
 }, {
   tabBarOptions: {
-    activeTintColor: 'purple',
+    activeTintColor: '#ed1848',
+    inactiveTintColor: '#073453',
+    style: { backgroundColor: '#e6f8fc' },
   },
 });
 

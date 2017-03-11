@@ -5,10 +5,18 @@ import {
   View,
   ListView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import AchievementCell from './AchievementCell';
 
 export default class HomeScreen extends Component {
+  static navigationOptions = {
+    tabBar: {
+      icon: ({ tintColor }) => (
+        <Icon name='trophy' size={28} color={tintColor} />
+      ),
+    },
+  }
 
   constructor(props) {
     super(props);
