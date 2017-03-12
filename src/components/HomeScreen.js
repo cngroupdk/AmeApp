@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  ScrollView,
+  ListView,
   StyleSheet,
   Text,
   View,
@@ -59,34 +59,47 @@ class HomeScreen extends Component {
     this._getTotalUsers = this._getTotalUsers.bind(this);
     this._getTotalChannels = this._getTotalChannels.bind(this);
     this._getTotalMessages = this._getTotalMessages.bind(this);
+    this._renderHomeCell = this._renderHomeCell.bind(this);
 
-    this.state = { totalUsers: 0, totalChannels: 0, totalMessages: 0 };
+    this.state = {
+      ds: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2,
+      }),
+      totalUsers: 0,
+      totalChannels: 0,
+      totalMessages: 0,
+    };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     getAllUsers(this._getTotalUsers);
     getAllChannels(this._getTotalChannels);
     getChannelsHistory(this._getTotalMessages);
   }
 
   _getTotalUsers(users) {
-    this.setState({ totalUsers: users.length });
+    if (this.refs.homeRef) {
+      this.setState({ totalUsers: users.length });
+    }
   }
 
   _getTotalChannels(channels) {
-    this.setState({ totalChannels: channels.length });
+    if (this.refs.homeRef) {
+      this.setState({ totalChannels: channels.length });
+    }
   }
 
   _getTotalMessages(messages) {
-    this.setState({ totalMessages: messages.length });
+    if (this.refs.homeRef) {
+      this.setState({ totalMessages: messages.length });
+    }
   }
 
-  _renderHomeCell(prop, idx) {
-    const { countId, icon, title } = prop;
-    console.log(countId, icon, title)
-    console.log(this.state)
+  _renderHomeCell(rowData, sectionID, rowID) {
+    const { countId, icon, title } = rowData;
+
     return (
-      <View key={idx} style={styles.homeCellContainer}>
+      <View key={rowID} style={styles.homeCellContainer}>
         <Icon name={icon} size={30} color={colorContstants.colorAquaIsland} />
         <Text style={styles.homeCellTitle}>{title}</Text>
         <Text style={styles.homeCellText}>{this.state[countId]}</Text>
@@ -113,10 +126,15 @@ class HomeScreen extends Component {
       },
     ];
 
+    const dataSource = this.state.ds.cloneWithRows(homeProps);
+
     return (
-      <ScrollView style={styles.homeContainer}>
-        {homeProps.map((prop, idx) => {this._renderHomeCell(prop, idx)})}
-      </ScrollView>
+      <View style={styles.homeContainer} ref="homeRef">
+        <ListView
+          dataSource={dataSource}
+          renderRow={this._renderHomeCell}
+        />
+      </View>
     );
   }
 }
