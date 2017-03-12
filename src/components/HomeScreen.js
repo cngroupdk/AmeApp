@@ -23,11 +23,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colorContstants.colorFoam,
   },
-  homeHeader: {
-   marginTop: 20,
-   backgroundColor: colorContstants.colorCrimson,
-   alignItems: 'center',
-  },
   listContainer: {
     flexWrap: 'wrap',
     flexDirection: 'row',
@@ -156,6 +151,7 @@ class HomeScreen extends Component {
           contentContainerStyle={styles.listContainer}
           dataSource={dataSource}
           renderRow={this._renderHomeCell}
+          enableEmptySections
         />
       </View>
     );

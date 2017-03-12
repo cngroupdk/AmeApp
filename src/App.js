@@ -4,7 +4,7 @@ import HomeScreen from './components/HomeScreen';
 import AchievementsScreen from './components/AchievementsScreen';
 import TopMessagesScreen from './components/TopMessagesScreen';
 import UsersScreen from './components/UsersScreen';
-
+import colorContstants from './helpers/color-constants';
 
 const AmeApp = TabNavigator({
   Home: { screen: HomeScreen },
@@ -13,9 +13,9 @@ const AmeApp = TabNavigator({
   Users: { screen: UsersScreen },
 }, {
   tabBarOptions: {
-    activeTintColor: '#ed1848',
-    inactiveTintColor: '#073453',
-    style: { backgroundColor: '#e6f8fc' },
+    activeTintColor: colorContstants.colorCrimson,
+    inactiveTintColor: colorContstants.colorTarawera,
+    style: { backgroundColor: colorContstants.colorFoam },
   },
 });
 

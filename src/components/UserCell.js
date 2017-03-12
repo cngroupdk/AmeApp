@@ -6,63 +6,65 @@ import {
   View,
 } from 'react-native';
 
-export default class UserCell extends React.Component {
+import colorContstants from '../helpers/color-constants';
+
+const styles = StyleSheet.create({
+  userCellContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderColor: colorContstants.colorFoam,
+    backgroundColor: colorContstants.colorWhite,
+    flexDirection: 'row',
+  },
+  userImage: {
+    height: 48,
+    width: 48,
+  },
+  userInfoContainer: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+  },
+  userName: {
+    color: colorContstants.colorTarawera,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+});
+
+class UserCell extends React.Component {
   static propTypes = {
+    index: PropTypes.string,
+    userID: PropTypes.string,
     userName: PropTypes.string,
     userImage: PropTypes.string,
-    userInfo: PropTypes.string,
-    userDescription: PropTypes.string,
-    msgCount: PropTypes.number,
-    msgSharedCount: PropTypes.number,
   };
+
+  _getCustomStyles(index) {
+    return {
+      borderTopWidth: index === '0' ? null : StyleSheet.hairlineWidth,
+    };
+  }
 
   render() {
     const {
+      index,
+      userID,
       userImage,
       userName,
-      userInfo,
-      userDescription,
-      msgCount,
-      msgSharedCount,
     } = this.props;
 
     return (
-      <View style={styles.wrapper}>
-        <View style={styles.cellTextWrapper}>
-          <Image
-            style={styles.icon}
-            source={{uri: userImage}}
-          />
-          <Text style={styles.text}>{userName}</Text>
+      <View style={[styles.userCellContainer, this._getCustomStyles(index)]}>
+        <View style={styles.userImageContainer}>
+          <Image style={styles.userImage} source={{uri: userImage}} />
         </View>
-          <Text style={styles.text}>{userInfo}</Text>
-          <Text style={styles.text}>{userDescription}</Text>
-          <Text style={styles.text}>Posted messages: {msgCount}</Text>
-          <Text style={styles.text}>Shared messages: {msgSharedCount}</Text>
+        <View style={styles.userInfoContainer}>
+          <Text style={styles.userName}>{userName}</Text>
+        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    margin: 10,
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
-    alignItems: 'stretch',
-  },
-  cellTextWrapper: {
-    alignItems: 'center',
-    height: 130,
-  },
-  icon: {
-    width: 100,
-    height: 100,
-    marginRight: 10,
-  },
-  text: {
-    fontSize: 25,
-  }
-});
+export default UserCell;

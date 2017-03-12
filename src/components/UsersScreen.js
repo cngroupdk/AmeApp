@@ -1,34 +1,25 @@
 import React, { Component } from 'react';
 import {
+  ListView,
   StyleSheet,
   Text,
   View,
-  ListView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Header from './Header';
 import UserCell from './UserCell';
+import colorContstants from '../helpers/color-constants';
+import { getAllUsers } from '../helpers/backend';
 
-const mockData =
-[
-  {
-    name: "Lukas Salek",
-    info: "Simply ...  I am the best person in the Word!",
-    description: "nice, sweet, pritty...",
-    messages: 55,
-    messagesShared:999,
+const styles = StyleSheet.create({
+  usersContainer: {
+    flex: 1,
+    backgroundColor: colorContstants.colorFoam,
   },
-  {
-    name: "Robo",
-    info: "Simply ... Lukas is the best person in the Word!",
-    description: "I want to be like Lukas",
-    messages: 54,
-    messagesShared:900,
-  }
-];
+});
 
-
-export default class HomeScreen extends Component {
+class UsersScreen extends Component {
   static navigationOptions = {
     tabBar: {
       icon: ({ tintColor }) => (
@@ -39,43 +30,57 @@ export default class HomeScreen extends Component {
 
   constructor(props) {
     super(props);
-    this._renderChannelItem = this._renderChannelItem.bind(this);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (row, newRow) => row !== newRow });
+    this._renderUserCell = this._renderUserCell.bind(this);
+    this._getAllUsers = this._getAllUsers.bind(this);
+
     this.state = {
-      dataSource: ds.cloneWithRows(mockData)
+      ds: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2,
+      }),
+      allUsers: [],
     };
   }
-  _renderChannelItem(data) {
+
+  componentWillMount() {
+    getAllUsers(this._getAllUsers);
+  }
+
+  _getAllUsers(users) {
+    if (this.refs.usersRef) {
+      this.setState({ allUsers: users });
+    }
+  }
+
+  _renderUserCell(rowData, sectionID, rowID) {
+    const { real_name, image_48, } = rowData.profile;
+
     return (
       <UserCell
-        userImage={'https://facebook.github.io/react/img/logo_og.png'}
-        userName={data.name}
-        userInfo={data.info}
-        userDescription={data.description}
-        msgCount={data.messages}
-        msgSharedCount={data.messagesShared}
+        index={rowID}
+        userID={rowData.id}
+        userImage={image_48}
+        userName={real_name}
       />
     );
   }
+
   render() {
+    const { allUsers, ds } = this.state;
+    const dataSource = ds.cloneWithRows(allUsers);
+
     return (
-      <ListView
-        style={styles.container}
-        dataSource={this.state.dataSource}
-        renderRow={this._renderChannelItem}
-        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-      />
+      <View style={styles.usersContainer} ref="usersRef">
+        <Header title='Users' />
+        <ListView
+          style={styles.container}
+          dataSource={dataSource}
+          renderRow={this._renderUserCell}
+          enableEmptySections
+        />
+      </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
-  },
-});
+export default UsersScreen;

@@ -11,8 +11,7 @@ let lastFetch = {
   user: 0,
 };
 
-
-const DELAY = 10000;
+const DELAY = 10000000;
 const channelsHistory = 'channels.history';
 const channelsList = 'channels.list';
 const slackUrl = 'https://slack.com/api/';
