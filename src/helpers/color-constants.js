@@ -4,6 +4,7 @@ const colorContstants = {
   colorFoam: '#E6F8FC',
   colorTarawera: '#073453',
   colorWhite: '#FFFFFF',
+  colorBlackTransparent: 'rgba(0, 0, 0, 0.2)',
 };
 
 export default colorContstants;

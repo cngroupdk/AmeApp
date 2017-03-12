@@ -9,7 +9,13 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import colorContstants from '../helpers/color-constants';
-import { getAllUsers, getAllChannels, getChannelsHistory } from '../helpers/backend';
+import Header from './Header';
+
+import {
+  getAllChannels,
+  getAllUsers,
+  getChannelsHistory,
+} from '../helpers/backend';
 
 const styles = StyleSheet.create({
   homeContainer: {
@@ -130,6 +136,7 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.homeContainer} ref="homeRef">
+        <Header title='Home' />
         <ListView
           dataSource={dataSource}
           renderRow={this._renderHomeCell}
