@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Dimensions,
   ListView,
   StyleSheet,
   Text,
@@ -27,13 +28,16 @@ const styles = StyleSheet.create({
    backgroundColor: colorContstants.colorCrimson,
    alignItems: 'center',
   },
+  listContainer: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
   homeCellContainer: {
-    flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: colorContstants.colorWhite,
     paddingTop: 20,
     paddingBottom: 20,
-    borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: colorContstants.colorFoam,
   },
   homeCellTitle: {
@@ -101,11 +105,22 @@ class HomeScreen extends Component {
     }
   }
 
+  _getCustomStyles(rowID) {
+    const { width } = Dimensions.get('window');
+
+    return {
+      width: rowID === '0' ? width : width/2,
+      borderTopWidth: rowID === '0' ? null : StyleSheet.hairlineWidth,
+      // TODO find better solution and not use 2
+      borderRightWidth: rowID === '0' || rowID === '2' ? null : StyleSheet.hairlineWidth,
+    };
+  }
+
   _renderHomeCell(rowData, sectionID, rowID) {
     const { countId, icon, title } = rowData;
 
     return (
-      <View key={rowID} style={styles.homeCellContainer}>
+      <View key={rowID} style={[styles.homeCellContainer, this._getCustomStyles(rowID)]}>
         <Icon name={icon} size={30} color={colorContstants.colorAquaIsland} />
         <Text style={styles.homeCellTitle}>{title}</Text>
         <Text style={styles.homeCellText}>{this.state[countId]}</Text>
@@ -116,6 +131,11 @@ class HomeScreen extends Component {
   render() {
     const homeProps = [
       {
+        icon: 'comment',
+        title: 'Total Messages',
+        countId: 'totalMessages',
+      },
+      {
         icon: 'users',
         title: 'Total Users',
         countId: 'totalUsers',
@@ -125,11 +145,6 @@ class HomeScreen extends Component {
         title: 'Total Channels',
         countId: 'totalChannels',
       },
-      {
-        icon: 'comment',
-        title: 'Total Messages',
-        countId: 'totalMessages',
-      },
     ];
 
     const dataSource = this.state.ds.cloneWithRows(homeProps);
@@ -138,6 +153,7 @@ class HomeScreen extends Component {
       <View style={styles.homeContainer} ref="homeRef">
         <Header title='Home' />
         <ListView
+          contentContainerStyle={styles.listContainer}
           dataSource={dataSource}
           renderRow={this._renderHomeCell}
         />
