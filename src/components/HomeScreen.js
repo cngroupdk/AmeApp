@@ -145,7 +145,7 @@ class HomeScreen extends Component {
     const dataSource = this.state.ds.cloneWithRows(homeProps);
 
     return (
-      <View style={styles.homeContainer} ref="homeRef">
+      <View style={styles.homeContainer} ref='homeRef'>
         <Header title='Home' />
         <ListView
           contentContainerStyle={styles.listContainer}

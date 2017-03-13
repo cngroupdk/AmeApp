@@ -11,13 +11,14 @@ let lastFetch = {
   user: 0,
 };
 
-const DELAY = 10000000;
+const DELAY = 10000;
 const channelsHistory = 'channels.history';
 const channelsList = 'channels.list';
 const slackUrl = 'https://slack.com/api/';
 const token = 'xoxp-149478955409-150168163651-150326302965-c536b1533cdbf4207cf5773e62f7f3b3';
 const userInfo = 'users.info';
 const usersList = 'users.list';
+const reactionsList = 'reactions.list';
 
 function getActualTime() {
   return Date.now();
@@ -187,6 +188,23 @@ app.get('/user/:id', (req, res) => {
   } else {
     res.json(serverData.user);
   }
+});
+
+app.get('/user-reaction/:id', (req, res) => {
+  axios.get(
+    `${slackUrl}${reactionsList}`,
+    {
+      params: {
+        token: token,
+        user: req.params.id,
+      }
+    }
+  ).then((response) => {
+    res.json(response.data.items);
+  }).catch((error) => {
+    console.log(`Error: ${error}`);
+    res.status(500).json({ error })
+  });
 });
 
 app.listen(3000, () => {

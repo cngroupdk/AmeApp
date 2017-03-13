@@ -28,6 +28,11 @@ export function getUserById(userID) {
   getFromAPI(userUrl, callback);
 }
 
+export function getReactionsByUser(userID, callback) {
+  const userReactionUrl = `${ameUrl}/user-reaction/${userID}`;
+  getFromAPI(userReactionUrl, callback);
+}
+
 function getFromAPI(url, callback) {
   fetch(url, { method: 'GET' }).then((response) => {
     response.json().then(callback)
