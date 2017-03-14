@@ -73,7 +73,6 @@ class UsersScreen extends Component {
       <View style={styles.usersContainer} ref="usersRef">
         <Header title='Users' />
         <ListView
-          style={styles.container}
           dataSource={dataSource}
           renderRow={this._renderUserCell}
           enableEmptySections

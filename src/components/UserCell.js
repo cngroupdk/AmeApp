@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
   userImage: {
     height: 48,
     width: 48,
+    borderRadius: 10,
   },
   userInfoContainer: {
     flex: 1,

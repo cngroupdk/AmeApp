@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  ListView,
   StyleSheet,
   Text,
   View,
@@ -7,7 +8,49 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class HomeScreen extends Component {
+import Header from './Header';
+import colorContstants from '../helpers/color-constants';
+import { getChannelsHistory } from '../helpers/backend';
+
+const styles = StyleSheet.create({
+ topMessagesContainer: {
+    flex: 1,
+    backgroundColor: colorContstants.colorFoam,
+  },
+  topMessageCellContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderColor: colorContstants.colorFoam,
+    backgroundColor: colorContstants.colorWhite,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cellNumber: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: colorContstants.colorCrimson,
+  },
+  messagesContainer: {
+    marginLeft: 10,
+  },
+  messageText: {
+    fontSize: 16,
+    color: colorContstants.colorTarawera,
+  },
+  reactionContainer: {
+    marginTop: 3,
+    marginLeft: 1,
+    borderLeftWidth: 2,
+    borderColor: colorContstants.colorCrimson,
+  },
+  reactionNumber: {
+    marginLeft: 5,
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
+});
+
+class TopMessagesScreen extends Component {
   static navigationOptions = {
     tabBar: {
       icon: ({ tintColor }) => (
@@ -16,32 +59,91 @@ export default class HomeScreen extends Component {
     },
   }
 
-  render() {
+  constructor(props) {
+    super(props);
+
+    this._getAllMessages = this._getAllMessages.bind(this);
+    this._renderTopMessageCell = this._renderTopMessageCell.bind(this);
+
+    this.state = {
+      ds: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2,
+      }),
+      topMessages: [],
+    };
+  }
+
+  componentWillMount() {
+    getChannelsHistory(this._getAllMessages);
+  }
+
+  _getAllMessages(messages) {
+    if (this.refs.topMessagesRef) {
+      const messagesWithReactions = messages.filter((message) => {
+        return message.reactions;
+      });
+
+      const mappedMessages = messagesWithReactions.map((message) => {
+        const { text } = message;
+        const reactions = message.reactions;
+
+        const countedReaction = reactions.map((reaction) => {
+          return reaction.count;
+        });
+
+        const count = countedReaction.reduce((a, b) => {
+          return a + b;
+        });
+
+        return { text, count };
+      });
+
+      this.setState({ topMessages: mappedMessages });
+    }
+  }
+
+  _getCustomStyles(index) {
+    return {
+      borderTopWidth: index === '0' ? null : StyleSheet.hairlineWidth,
+    };
+  }
+
+  _renderTopMessageCell(rowData, sectionID, rowID) {
+    const { text, count } = rowData;
+    const messageNumber = Number(rowID) + 1;
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-         Welcome to the Hell....!
-        </Text>
+      <View key={rowID} style={[styles.topMessageCellContainer, this._getCustomStyles(rowID)]}>
+        <Text style={styles.cellNumber}>{messageNumber}</Text>
+        <View style={styles.messagesContainer}>
+          <Text style={styles.messageText}>{ text }</Text>
+          <View style={styles.reactionContainer}>
+            <Text style={styles.reactionNumber}>{ count } Reaction</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  render() {
+    const { topMessages } = this.state;
+    const sortedTopMessages = topMessages.sort((a, b) => {
+      return b.count - a.count ;
+    });
+
+    const dataSource = this.state.ds.cloneWithRows(sortedTopMessages);
+
+    return (
+      <View style={styles.topMessagesContainer} ref='topMessagesRef'>
+        <Header title='Top Messages' />
+        <ListView
+          dataSource={dataSource}
+          renderRow={this._renderTopMessageCell}
+          enableEmptySections
+        />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+export default TopMessagesScreen;
