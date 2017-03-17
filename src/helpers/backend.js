@@ -8,7 +8,6 @@ export function getChannelsHistory(callback) {
 
 export function getChannelHistory(channelID) {
   const channelHistoryUrl = `${ameUrl}/channel-history/${channelID}`;
-  const callback = (data) => console.log(data);
   getFromAPI(channelHistoryUrl, callback);
 }
 
@@ -24,7 +23,6 @@ export function getAllUsers(callback) {
 
 export function getUserById(userID) {
   const userUrl = `${ameUrl}/user/${userID}`;
-  const callback = (data) => console.log(data);
   getFromAPI(userUrl, callback);
 }
 

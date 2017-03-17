@@ -1,16 +1,11 @@
-import React, { Component } from 'react';
-import {
-  ListView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {ListView, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Header from './Header';
 import UserCell from './UserCell';
 import colorContstants from '../helpers/color-constants';
-import { getAllUsers } from '../helpers/backend';
+import {getAllUsers} from '../helpers/backend';
 
 const styles = StyleSheet.create({
   usersContainer: {
@@ -22,11 +17,9 @@ const styles = StyleSheet.create({
 class UsersScreen extends Component {
   static navigationOptions = {
     tabBar: {
-      icon: ({ tintColor }) => (
-        <Icon name='users' size={28} color={tintColor} />
-      ),
+      icon: ({tintColor}) => <Icon name="users" size={28} color={tintColor} />,
     },
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -48,12 +41,12 @@ class UsersScreen extends Component {
 
   _getAllUsers(users) {
     if (this.refs.usersRef) {
-      this.setState({ allUsers: users });
+      this.setState({allUsers: users});
     }
   }
 
   _renderUserCell(rowData, sectionID, rowID) {
-    const { real_name, image_48, } = rowData.profile;
+    const {real_name, image_48} = rowData.profile;
 
     return (
       <UserCell
@@ -66,12 +59,12 @@ class UsersScreen extends Component {
   }
 
   render() {
-    const { allUsers, ds } = this.state;
+    const {allUsers, ds} = this.state;
     const dataSource = ds.cloneWithRows(allUsers);
 
     return (
       <View style={styles.usersContainer} ref="usersRef">
-        <Header title='Users' />
+        <Header title="Users" />
         <ListView
           dataSource={dataSource}
           renderRow={this._renderUserCell}

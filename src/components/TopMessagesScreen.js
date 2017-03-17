@@ -1,19 +1,14 @@
-import React, { Component } from 'react';
-import {
-  ListView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {ListView, StyleSheet, Text, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Header from './Header';
 import colorContstants from '../helpers/color-constants';
-import { getChannelsHistory } from '../helpers/backend';
+import {getChannelsHistory} from '../helpers/backend';
 
 const styles = StyleSheet.create({
- topMessagesContainer: {
+  topMessagesContainer: {
     flex: 1,
     backgroundColor: colorContstants.colorFoam,
   },
@@ -53,11 +48,11 @@ const styles = StyleSheet.create({
 class TopMessagesScreen extends Component {
   static navigationOptions = {
     tabBar: {
-      icon: ({ tintColor }) => (
-        <Icon name='comment' size={28} color={tintColor} />
+      icon: ({tintColor}) => (
+        <Icon name="comment" size={28} color={tintColor} />
       ),
     },
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -79,26 +74,28 @@ class TopMessagesScreen extends Component {
 
   _getAllMessages(messages) {
     if (this.refs.topMessagesRef) {
-      const messagesWithReactions = messages.filter((message) => {
+      const messagesWithReactions = messages.filter(message => {
         return message.reactions;
       });
 
-      const mappedMessages = messagesWithReactions.map((message) => {
-        const { text } = message;
+      const mappedMessages = messagesWithReactions.map(message => {
+        const {text} = message;
         const reactions = message.reactions;
 
-        const countedReaction = reactions.map((reaction) => {
+        const countedReaction = reactions.map(reaction => {
           return reaction.count;
         });
 
-        const count = countedReaction.reduce((a, b) => {
-          return a + b;
-        });
+        const count = countedReaction.reduce(
+          (totalReactions, nextReactions) => {
+            return totalReactions + nextReactions;
+          },
+        );
 
-        return { text, count };
+        return {text, count};
       });
 
-      this.setState({ topMessages: mappedMessages });
+      this.setState({topMessages: mappedMessages});
     }
   }
 
@@ -109,16 +106,19 @@ class TopMessagesScreen extends Component {
   }
 
   _renderTopMessageCell(rowData, sectionID, rowID) {
-    const { text, count } = rowData;
+    const {text, count} = rowData;
     const messageNumber = Number(rowID) + 1;
 
     return (
-      <View key={rowID} style={[styles.topMessageCellContainer, this._getCustomStyles(rowID)]}>
+      <View
+        key={rowID}
+        style={[styles.topMessageCellContainer, this._getCustomStyles(rowID)]}
+      >
         <Text style={styles.cellNumber}>{messageNumber}</Text>
         <View style={styles.messagesContainer}>
-          <Text style={styles.messageText}>{ text }</Text>
+          <Text style={styles.messageText}>{text}</Text>
           <View style={styles.reactionContainer}>
-            <Text style={styles.reactionNumber}>{ count } Reaction</Text>
+            <Text style={styles.reactionNumber}>{count} Reaction</Text>
           </View>
         </View>
       </View>
@@ -126,16 +126,16 @@ class TopMessagesScreen extends Component {
   }
 
   render() {
-    const { topMessages } = this.state;
+    const {topMessages} = this.state;
     const sortedTopMessages = topMessages.sort((a, b) => {
-      return b.count - a.count ;
+      return b.count - a.count;
     });
 
     const dataSource = this.state.ds.cloneWithRows(sortedTopMessages);
 
     return (
-      <View style={styles.topMessagesContainer} ref='topMessagesRef'>
-        <Header title='Top Messages' />
+      <View style={styles.topMessagesContainer} ref="topMessagesRef">
+        <Header title="Top Messages" />
         <ListView
           dataSource={dataSource}
           renderRow={this._renderTopMessageCell}

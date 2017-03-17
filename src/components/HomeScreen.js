@@ -1,11 +1,5 @@
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  ListView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, ListView, StyleSheet, Text, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -23,17 +17,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colorContstants.colorFoam,
   },
-  listContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
   homeCellContainer: {
     alignItems: 'center',
     backgroundColor: colorContstants.colorWhite,
     paddingTop: 20,
     paddingBottom: 20,
     borderColor: colorContstants.colorFoam,
+    borderWidth: 1,
+    justifyContent: 'center',
   },
   homeCellTitle: {
     fontSize: 22,
@@ -52,11 +43,9 @@ const styles = StyleSheet.create({
 class HomeScreen extends Component {
   static navigationOptions = {
     tabBar: {
-      icon: ({ tintColor }) => (
-        <Icon name='home' size={28} color={tintColor} />
-      ),
+      icon: ({tintColor}) => <Icon name="home" size={28} color={tintColor} />,
     },
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -64,12 +53,8 @@ class HomeScreen extends Component {
     this._getTotalUsers = this._getTotalUsers.bind(this);
     this._getTotalChannels = this._getTotalChannels.bind(this);
     this._getTotalMessages = this._getTotalMessages.bind(this);
-    this._renderHomeCell = this._renderHomeCell.bind(this);
 
     this.state = {
-      ds: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2,
-      }),
       totalUsers: 0,
       totalChannels: 0,
       totalMessages: 0,
@@ -84,75 +69,55 @@ class HomeScreen extends Component {
 
   _getTotalUsers(users) {
     if (this.refs.homeRef) {
-      this.setState({ totalUsers: users.length });
+      this.setState({totalUsers: users.length});
     }
   }
 
   _getTotalChannels(channels) {
     if (this.refs.homeRef) {
-      this.setState({ totalChannels: channels.length });
+      this.setState({totalChannels: channels.length});
     }
   }
 
   _getTotalMessages(messages) {
     if (this.refs.homeRef) {
-      this.setState({ totalMessages: messages.length });
+      this.setState({totalMessages: messages.length});
     }
   }
 
-  _getCustomStyles(rowID) {
-    const { width } = Dimensions.get('window');
-
-    return {
-      width: rowID === '0' ? width : width/2,
-      borderTopWidth: rowID === '0' ? null : StyleSheet.hairlineWidth,
-      // TODO find better solution and not use 2
-      borderRightWidth: rowID === '0' || rowID === '2' ? null : StyleSheet.hairlineWidth,
-    };
-  }
-
-  _renderHomeCell(rowData, sectionID, rowID) {
-    const { countId, icon, title } = rowData;
-
-    return (
-      <View key={rowID} style={[styles.homeCellContainer, this._getCustomStyles(rowID)]}>
-        <Icon name={icon} size={30} color={colorContstants.colorAquaIsland} />
-        <Text style={styles.homeCellTitle}>{title}</Text>
-        <Text style={styles.homeCellText}>{this.state[countId]}</Text>
-      </View>
-    );
-  }
-
   render() {
-    const homeProps = [
-      {
-        icon: 'comment',
-        title: 'Total Messages',
-        countId: 'totalMessages',
-      },
-      {
-        icon: 'users',
-        title: 'Total Users',
-        countId: 'totalUsers',
-      },
-      {
-        icon: 'flag',
-        title: 'Total Channels',
-        countId: 'totalChannels',
-      },
-    ];
-
-    const dataSource = this.state.ds.cloneWithRows(homeProps);
-
     return (
-      <View style={styles.homeContainer} ref='homeRef'>
-        <Header title='Home' />
-        <ListView
-          contentContainerStyle={styles.listContainer}
-          dataSource={dataSource}
-          renderRow={this._renderHomeCell}
-          enableEmptySections
-        />
+      <View style={styles.homeContainer} ref="homeRef">
+        <Header title="Home" />
+        <View style={[styles.homeCellContainer, {flex: 3}]}>
+          <Icon
+            name={'comment'}
+            size={30}
+            color={colorContstants.colorAquaIsland}
+          />
+          <Text style={styles.homeCellTitle}>Total Messages</Text>
+          <Text style={styles.homeCellText}>{this.state.totalMessages}</Text>
+        </View>
+        <View style={{flexDirection: 'row', flex: 2}}>
+          <View style={[styles.homeCellContainer, {flex: 1}]}>
+            <Icon
+              name={'users'}
+              size={30}
+              color={colorContstants.colorAquaIsland}
+            />
+            <Text style={styles.homeCellTitle}>Total Users</Text>
+            <Text style={styles.homeCellText}>{this.state.totalUsers}</Text>
+          </View>
+          <View style={[styles.homeCellContainer, {flex: 1}]}>
+            <Icon
+              name={'flag'}
+              size={30}
+              color={colorContstants.colorAquaIsland}
+            />
+            <Text style={styles.homeCellTitle}>Total Channels</Text>
+            <Text style={styles.homeCellText}>{this.state.totalChannels}</Text>
+          </View>
+        </View>
       </View>
     );
   }
