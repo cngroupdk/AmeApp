@@ -31,7 +31,7 @@ export const messages = [
   },
 ];
 
-const user = {
+export const user = {
   id: 'U4E4ME9V0',
   profile: {
     first_name: 'Lenka',

@@ -1,5 +1,4 @@
 const ameUrl = 'http://localhost:3000';
-// TODO durring worhskop this should by IP_ADDRESS_OF_PC:3000 where the server will run
 
 export function getChannelsHistory(callback) {
   const channelsHistoryUrl = `${ameUrl}/channels-history`;
