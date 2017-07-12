@@ -12,8 +12,9 @@ const AmeApp = TabNavigator({
   TopMessages: { screen: HomeScreen },
   Users: { screen: UsersScreen },
 }, {
-  initialRouteName: 'Users',
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
+  swipeEnabled: true,
   tabBarOptions: {
     activeTintColor: colorContstants.colorCrimson,
     inactiveTintColor: colorContstants.colorTarawera,

@@ -5,12 +5,19 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { user } from '../mock-data';
 import colorContstants from '../helpers/color-constants';
 import { getAllUsers } from '../helpers/backend';
 
 class UsersScreen extends Component {
+  static navigationOptions = {
+    tabBar: {
+      icon: ({tintColor}) => <Icon name="user" size={28} color={tintColor} />,
+    },
+  };
+
   constructor(props) {
     super(props)
 
